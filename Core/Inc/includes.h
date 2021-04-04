@@ -16,5 +16,7 @@
 
 #include "usart.h"
 
+#include "rtc.h"
+
 
 #endif /* INCLUDES_H_ */
