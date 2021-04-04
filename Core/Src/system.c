@@ -1,12 +1,21 @@
 /*
  * system.c
  *
- *  Created on: 2021.3.29
+ *  Created on: 2021.04.04
  *      Author: Wulizhaoch
  */
 
 #include "system.h"
 
+
+uint8_t SystemChipID(SystemChipIDTypeDef *ChipID)
+{
+    ChipID->ChcipID_H = HAL_GetUIDw0();
+    ChipID->ChcipID_M = HAL_GetUIDw1();
+    ChipID->ChcipID_L = HAL_GetUIDw2();
+
+    return HAL_OK;
+}
 
 
 void RCC_CLK_Enable(void)

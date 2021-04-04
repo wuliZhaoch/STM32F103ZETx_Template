@@ -11,6 +11,13 @@
 
 #include "common.h"
 
+typedef struct {
+    uint32_t ChcipID_H;
+    uint32_t ChcipID_M;
+    uint32_t ChcipID_L;
+} SystemChipIDTypeDef;
+
+uint8_t SystemChipID(SystemChipIDTypeDef *ChipID);
 
 void RCC_CLK_Enable(void);
 
