@@ -31,9 +31,11 @@
 /* USER CODE END Includes */
 
 extern RTC_HandleTypeDef hrtc;
+extern RTC_DateTypeDef GetData;
+extern RTC_TimeTypeDef GetTime;
 
 /* USER CODE BEGIN Private defines */
-
+#define BKUP_SET_FLAG   0X5A50          // This value is arbitrarily defined
 /* USER CODE END Private defines */
 
 void MX_RTC_Init(void);

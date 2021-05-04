@@ -22,6 +22,9 @@
 
 /* USER CODE BEGIN 0 */
 
+RTC_DateTypeDef GetData;
+RTC_TimeTypeDef GetTime;
+
 /* USER CODE END 0 */
 
 RTC_HandleTypeDef hrtc;
@@ -29,42 +32,69 @@ RTC_HandleTypeDef hrtc;
 /* RTC init function */
 void MX_RTC_Init(void)
 {
-  RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef DateToUpdate = {0};
+    RTC_TimeTypeDef sTime ={0};
+    RTC_DateTypeDef DateToUpdate = {0};
+    RTC_DateTypeDef DateBuff = {0};
 
-  /** Initialize RTC Only
-  */
-  hrtc.Instance = RTC;
-  hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
-  hrtc.Init.OutPut = RTC_OUTPUTSOURCE_ALARM;
-  if (HAL_RTC_Init(&hrtc) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    __HAL_RCC_BKP_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
 
-  /* USER CODE BEGIN Check_RTC_BKUP */
+    /** Initialize RTC Only */
+    hrtc.Instance = RTC;
+    hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+    hrtc.Init.OutPut = RTC_OUTPUTSOURCE_ALARM;
+    if (HAL_RTC_Init(&hrtc) != HAL_OK)
+    {
+        Error_Handler();
+    }
 
-  /* USER CODE END Check_RTC_BKUP */
+    /* USER CODE BEGIN Check_RTC_BKUP */
+    if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1) != BKUP_SET_FLAG)
+    {
+        /* USER CODE END Check_RTC_BKUP */
 
-  /** Initialize RTC and set the Time and Date
-  */
-  sTime.Hours = 0x21;
-  sTime.Minutes = 0x0;
-  sTime.Seconds = 0x0;
+        /** Initialize RTC and set the Time and Date
+         */
+        sTime.Hours = 0x19;
+        sTime.Minutes = 0x16;
+        sTime.Seconds = 0x0;
 
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
-  DateToUpdate.Month = RTC_MONTH_APRIL;
-  DateToUpdate.Date = 0x4;
-  DateToUpdate.Year = 0x21;
+        if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+        {
+            Error_Handler();
+        }
+        DateToUpdate.WeekDay = RTC_WEEKDAY_TUESDAY;
+        DateToUpdate.Month = RTC_MONTH_MAY;
+        DateToUpdate.Date = 0x4;
+        DateToUpdate.Year = 0x21;
 
-  if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
+        if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        __HAL_RTC_SECOND_ENABLE_IT(&hrtc,RTC_IT_SEC);    //开启RTC时钟秒中断
+        DateBuff = DateToUpdate;  //把日期数据拷贝到自己定义的data中
+        HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, BKUP_SET_FLAG);//向指定的后备区域寄存器写入数据
+        HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2, (uint16_t)DateBuff.Year);
+        HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3, (uint16_t)DateBuff.Month);
+        HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4, (uint16_t)DateBuff.Date);
+        HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR5, (uint16_t)DateBuff.WeekDay);
+    } else {
+
+        DateBuff.Year    = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR2);
+        DateBuff.Month   = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3);
+        DateBuff.Date    = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
+        DateBuff.WeekDay = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR5);
+        DateToUpdate = DateBuff;
+        if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
+        {
+          Error_Handler();
+        }
+        __HAL_RTC_SECOND_ENABLE_IT(&hrtc,RTC_IT_SEC);    //开启RTC时钟秒中断
+    }
+
+
 
 }
 
