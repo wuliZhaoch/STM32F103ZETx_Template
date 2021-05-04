@@ -7,7 +7,7 @@
 <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_script_path" value=""/>
 <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_script_used" value="false"/>
 <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_txt_serial_number" value=""/>
-<stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.reset_strategy" value="type_0_normal"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.reset_strategy" value="no_reset"/>
 <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_auto" value="true"/>
 <intAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_irpre" value="0"/>
 <intAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_pos" value="0"/>
