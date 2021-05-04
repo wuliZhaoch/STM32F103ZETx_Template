@@ -18,5 +18,8 @@
 
 #include "rtc.h"
 
+#include "chip_id.h"
+
+#include "delay.h"
 
 #endif /* INCLUDES_H_ */
